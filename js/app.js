@@ -234,8 +234,8 @@ function renderCards(filter) {
         <div class="card-text">${carta.text.substring(0, 160)}...</div>
         <div class="card-actions">
           <button class="btn btn-ghost" onclick="copyCarta(${carta.id})">📋 Copiar</button>
-          <button class="btn btn-ghost" onclick="readCarta(${carta.id})">👁 Ver completa</button>
           <button class="btn btn-ghost" onclick="shareCartaWA(${carta.id})">🟢 WA</button>
+          <button class="btn btn-download" onclick="downloadPDF(${carta.id})">⬇️ PDF Gratis</button>
         </div>`;
     }
     grid.appendChild(div);
@@ -369,6 +369,131 @@ function generateLetter() {
   document.getElementById('prevBody').textContent       = text;
   document.getElementById('prevBody').dataset.generated = 'true';
   document.getElementById('prevSign').textContent       = `— Con todo mi amor, ${from}`;
+}
+
+/* ============================================================
+   DESCARGAR PDF GRATIS — generado en el navegador con Canvas
+   ============================================================ */
+function downloadPDF(id) {
+  const carta = cartas.find(c => c.id === id);
+  if (!carta) return;
+
+  /* --- Canvas setup --- */
+  const W = 794, H = 1123; // A4 a 96dpi
+  const canvas = document.createElement('canvas');
+  canvas.width  = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  /* --- Fondo degradado oscuro romántico --- */
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0,   '#2d0813');
+  bg.addColorStop(0.5, '#1A0A10');
+  bg.addColorStop(1,   '#3d0015');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  /* --- Borde dorado --- */
+  ctx.strokeStyle = 'rgba(201,150,58,0.6)';
+  ctx.lineWidth   = 3;
+  ctx.strokeRect(28, 28, W - 56, H - 56);
+  ctx.strokeStyle = 'rgba(201,150,58,0.2)';
+  ctx.lineWidth   = 1;
+  ctx.strokeRect(38, 38, W - 76, H - 76);
+
+  /* --- Corazones decorativos esquinas --- */
+  const hearts = ['❤️','💕','🌹','💖'];
+  ctx.font = '28px serif';
+  ctx.fillText(hearts[0], 52,  72);
+  ctx.fillText(hearts[1], W-82, 72);
+  ctx.fillText(hearts[2], 52,  H-42);
+  ctx.fillText(hearts[3], W-82, H-42);
+
+  /* --- Icono categoría --- */
+  ctx.font = '48px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(carta.icon, W/2, 110);
+
+  /* --- Categoría label --- */
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillStyle = '#F0C96A';
+  ctx.letterSpacing = '3px';
+  ctx.fillText(carta.catLabel.toUpperCase(), W/2, 148);
+
+  /* --- Línea separadora dorada --- */
+  const grad = ctx.createLinearGradient(120, 0, W-120, 0);
+  grad.addColorStop(0,   'transparent');
+  grad.addColorStop(0.5, 'rgba(201,150,58,0.8)');
+  grad.addColorStop(1,   'transparent');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth   = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 162); ctx.lineTo(W-120, 162);
+  ctx.stroke();
+
+  /* --- Título de la carta --- */
+  ctx.font = 'italic bold 22px Georgia, serif';
+  ctx.fillStyle = '#F9BFCB';
+  ctx.fillText(carta.title, W/2, 200);
+
+  /* --- Cuerpo de la carta (wrap de texto) --- */
+  ctx.font = '15px Georgia, serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.textAlign = 'left';
+
+  const lines    = [];
+  const maxWidth = W - 140;
+  const paragraphs = carta.text.split('\n');
+
+  paragraphs.forEach(para => {
+    if (para.trim() === '') { lines.push(''); return; }
+    const words = para.split(' ');
+    let line = '';
+    words.forEach(word => {
+      const test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = test;
+      }
+    });
+    if (line) lines.push(line);
+    lines.push('');
+  });
+
+  let y = 236;
+  const lineH = 24;
+  lines.forEach(line => {
+    if (y < H - 110) {
+      ctx.fillText(line, 70, y);
+      y += line === '' ? lineH * 0.6 : lineH;
+    }
+  });
+
+  /* --- Línea separadora final --- */
+  ctx.strokeStyle = grad;
+  ctx.lineWidth   = 1;
+  ctx.beginPath();
+  ctx.moveTo(120, H-100); ctx.lineTo(W-120, H-100);
+  ctx.stroke();
+
+  /* --- Marca de agua / branding --- */
+  ctx.textAlign  = 'center';
+  ctx.font       = 'italic 18px Georgia, serif';
+  ctx.fillStyle  = '#F0C96A';
+  ctx.fillText('CartaMiAmor', W/2, H-68);
+  ctx.font       = '12px sans-serif';
+  ctx.fillStyle  = 'rgba(255,255,255,0.35)';
+  ctx.fillText('cartamiamor.pages.dev  ·  Carta generada gratis 💌', W/2, H-46);
+
+  /* --- Descargar como imagen PNG (funciona sin librerías) --- */
+  const link    = document.createElement('a');
+  link.download = `carta-${carta.cat}-CartaMiAmor.png`;
+  link.href     = canvas.toDataURL('image/png');
+  link.click();
+
+  showCopyFeedback('📄 ¡Carta descargada! Compártela con amor 💌');
 }
 
 function copyGeneratedLetter() {
