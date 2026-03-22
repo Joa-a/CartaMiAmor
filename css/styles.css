@@ -958,14 +958,14 @@ footer {
 .encargo-card-desc  { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 6px; flex: 1; }
 .encargo-trust      { font-size: 0.82rem; color: var(--muted); }
 /* ------------------------------------------------------------
-   25. BOTÓN DESCARGAR PDF
+   26. BOTÓN EDITAR EN CARD
    ------------------------------------------------------------ */
-.btn-download {
+.btn-edit {
   background: linear-gradient(135deg, #1A0A10, #3d0015);
   color: var(--gold-lt);
-  border: 1.5px solid rgba(201,150,58,0.45);
+  border: 1.5px solid rgba(201,150,58,0.4);
   font-size: 0.82rem;
-  padding: 10px 18px;
+  padding: 10px 16px;
   border-radius: 50px;
   cursor: pointer;
   font-family: 'Lato', sans-serif;
@@ -973,12 +973,67 @@ footer {
   transition: all var(--transition);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  letter-spacing: 0.04em;
+  gap: 5px;
 }
-.btn-download:hover {
-  background: linear-gradient(135deg, #3d0015, #1A0A10);
-  border-color: rgba(201,150,58,0.8);
+.btn-edit:hover {
+  border-color: var(--gold-lt);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(201,150,58,0.25);
+  box-shadow: 0 4px 16px rgba(201,150,58,0.25);
 }
+
+/* ------------------------------------------------------------
+   27. MODAL EDITOR ANCHO + CAMPOS
+   ------------------------------------------------------------ */
+.modal-box-wide {
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: left;
+  padding: 36px 32px;
+}
+.edit-field    { margin-bottom: 18px; }
+.edit-label    { display:block; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.edit-input    { width:100%; padding:11px 14px; border:2px solid var(--blush); border-radius:var(--radius-sm); font-family:'Lato',sans-serif; font-size:0.92rem; color:var(--dark); background:var(--ivory); outline:none; transition:border-color var(--transition); }
+.edit-input:focus   { border-color:var(--rose); background:white; }
+.edit-textarea { min-height:200px; resize:vertical; line-height:1.7; }
+
+/* Icon picker compartido (modal + generador) */
+.icon-picker   { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
+.icon-opt      { background:var(--petal); border:2px solid transparent; border-radius:10px; padding:6px 9px; font-size:1.3rem; cursor:pointer; transition:all var(--transition); line-height:1; }
+.icon-opt:hover  { border-color:var(--blush); transform:scale(1.15); }
+.icon-opt.active { border-color:var(--rose); background:var(--blush); transform:scale(1.15); }
+
+/* ------------------------------------------------------------
+   28. GENERADOR — CAMPOS AVANZADOS
+   ------------------------------------------------------------ */
+.advanced-toggle {
+  margin-bottom: 20px;
+  border: 1.5px solid var(--blush);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.advanced-toggle summary {
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ivory);
+  transition: background var(--transition);
+}
+.advanced-toggle summary:hover  { background: var(--petal); }
+.advanced-toggle[open] summary  { background: var(--petal); border-bottom:1px solid var(--blush); }
+.advanced-fields { padding: 18px 16px; background: white; }
+
+/* ------------------------------------------------------------
+   29. PREVIEW ICONO + CONTENTEDITABLE
+   ------------------------------------------------------------ */
+.prev-icon-wrap { text-align:center; margin-bottom:10px; }
+.prev-icon      { font-size:2.8rem; display:inline-block; cursor:text; border-radius:8px; padding:4px 8px; transition:background 0.2s; }
+.prev-icon:focus, [contenteditable]:focus { outline:none; background:rgba(255,255,255,0.08); border-radius:6px; }
+[contenteditable] { cursor:text; }

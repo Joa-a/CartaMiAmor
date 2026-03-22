@@ -235,7 +235,7 @@ function renderCards(filter) {
         <div class="card-actions">
           <button class="btn btn-ghost" onclick="copyCarta(${carta.id})">📋 Copiar</button>
           <button class="btn btn-ghost" onclick="shareCartaWA(${carta.id})">🟢 WA</button>
-          <button class="btn btn-download" onclick="downloadPDF(${carta.id})">⬇️ PDF Gratis</button>
+          <button class="btn btn-edit"  onclick="openEditModal(${carta.id})">✏️ Editar</button>
         </div>`;
     }
     grid.appendChild(div);
@@ -256,8 +256,117 @@ function filterCards(cat, btn) {
 }
 
 /* ============================================================
-   COPIAR CARTA
+   MODAL EDITOR — CARTAS DEL GRID
    ============================================================ */
+const ICONS = ['🌹','💍','👰','🌙','✈️','🌸','💌','🔥','💛','♾️','🎭','🌺','💎','🎂','🌟','💝','🦋','🕊️','🌈','⭐'];
+const CATS  = [
+  { value:'san-valentin',  label:'San Valentín' },
+  { value:'aniversario',   label:'Aniversario'  },
+  { value:'boda',          label:'Boda'          },
+  { value:'buenas-noches', label:'Buenas noches' },
+  { value:'distancia',     label:'A distancia'   }
+];
+
+function openEditModal(id) {
+  const carta = cartas.find(c => c.id === id);
+  if (!carta) return;
+
+  /* Construye el HTML del modal dinámicamente */
+  document.getElementById('editModalContent').innerHTML = `
+    <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+    <span class="modal-icon">✏️</span>
+    <div class="modal-title">Editar carta</div>
+
+    <!-- ICONO -->
+    <div class="edit-field">
+      <label class="edit-label">Icono</label>
+      <div class="icon-picker" id="iconPicker">
+        ${ICONS.map(ic => `
+          <button class="icon-opt ${ic === carta.icon ? 'active' : ''}"
+                  onclick="selectIcon('${ic}', this)">${ic}</button>
+        `).join('')}
+      </div>
+      <input type="hidden" id="editIcon" value="${carta.icon}" />
+    </div>
+
+    <!-- TÍTULO -->
+    <div class="edit-field">
+      <label class="edit-label">Título</label>
+      <input class="edit-input" type="text" id="editTitle" value="${carta.title}" />
+    </div>
+
+    <!-- CATEGORÍA -->
+    <div class="edit-field">
+      <label class="edit-label">Categoría</label>
+      <select class="edit-input" id="editCat">
+        ${CATS.map(c => `<option value="${c.value}" ${c.value === carta.cat ? 'selected' : ''}>${c.label}</option>`).join('')}
+      </select>
+    </div>
+
+    <!-- TEXTO COMPLETO -->
+    <div class="edit-field">
+      <label class="edit-label">Texto de la carta</label>
+      <textarea class="edit-input edit-textarea" id="editText">${carta.text}</textarea>
+    </div>
+
+    <!-- ACCIONES -->
+    <div style="display:flex; gap:10px; margin-top:6px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveEdit(${id})">💾 Guardar cambios</button>
+      <button class="btn btn-ghost" onclick="resetEdit(${id})">↩️ Restaurar original</button>
+    </div>
+  `;
+
+  /* Guarda original para poder restaurar */
+  document.getElementById('editModal').dataset.originalIcon  = carta.icon;
+  document.getElementById('editModal').dataset.originalTitle = carta.title;
+  document.getElementById('editModal').dataset.originalCat   = carta.cat;
+  document.getElementById('editModal').dataset.originalText  = carta.text;
+
+  openModal('editModal');
+}
+
+function selectIcon(icon, btn) {
+  document.getElementById('editIcon').value = icon;
+  document.querySelectorAll('.icon-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function saveEdit(id) {
+  const carta    = cartas.find(c => c.id === id);
+  if (!carta) return;
+
+  const newCat   = document.getElementById('editCat').value;
+  const catLabel = CATS.find(c => c.value === newCat)?.label || newCat;
+
+  carta.icon     = document.getElementById('editIcon').value;
+  carta.title    = document.getElementById('editTitle').value.trim()  || carta.title;
+  carta.cat      = newCat;
+  carta.catLabel = catLabel;
+  carta.text     = document.getElementById('editText').value.trim()   || carta.text;
+
+  closeModal('editModal');
+  renderCards(currentFilter);
+  showCopyFeedback('✅ ¡Carta actualizada!');
+}
+
+function resetEdit(id) {
+  const modal = document.getElementById('editModal');
+  const carta = cartas.find(c => c.id === id);
+  if (!carta) return;
+
+  /* Restaura valores originales al objeto */
+  carta.icon     = modal.dataset.originalIcon;
+  carta.title    = modal.dataset.originalTitle;
+  carta.cat      = modal.dataset.originalCat;
+  carta.catLabel = CATS.find(c => c.value === carta.cat)?.label || carta.cat;
+  carta.text     = modal.dataset.originalText;
+
+  closeModal('editModal');
+  renderCards(currentFilter);
+  showCopyFeedback('↩️ Carta restaurada al original');
+}
+
+
 /**
  * Copia el texto de una carta al portapapeles
  * @param {number} id - ID de la carta
@@ -324,6 +433,11 @@ function updatePreview() {
   const from = document.getElementById('fromName').value || 'Tu amor';
   const occ  = document.getElementById('occasion').value;
 
+  /* Campos extra del generador avanzado */
+  const customTitle = document.getElementById('customTitle')?.value.trim();
+  const customSign  = document.getElementById('customSign')?.value.trim();
+  const customIcon  = document.getElementById('genIcon')?.value || '💌';
+
   const titleMap = {
     'san-valentin': `${to} de mi corazón,`,
     'aniversario':  `${to}, mi vida,`,
@@ -333,8 +447,10 @@ function updatePreview() {
     'amor-eterno':  `${to}, mi todo,`
   };
 
-  document.getElementById('prevTitle').textContent = titleMap[occ] || `${to}, mi amor,`;
-  document.getElementById('prevSign').textContent  = `— Con todo mi amor, ${from}`;
+  document.getElementById('prevIcon').textContent  = customIcon;
+  document.getElementById('prevTitle').textContent = customTitle || titleMap[occ] || `${to}, mi amor,`;
+  document.getElementById('prevSign').textContent  = customSign  || `— Con todo mi amor, ${from}`;
+
   const note = document.getElementById('personalNote').value;
   if (!document.getElementById('prevBody').dataset.generated && note) {
     document.getElementById('prevBody').textContent = note;
@@ -347,6 +463,11 @@ function generateLetter() {
   const occ  = document.getElementById('occasion').value;
   const tone = document.getElementById('tone').value;
   const note = document.getElementById('personalNote').value;
+
+  /* Campos avanzados */
+  const customTitle = document.getElementById('customTitle')?.value.trim();
+  const customSign  = document.getElementById('customSign')?.value.trim();
+  const customIcon  = document.getElementById('genIcon')?.value || '💌';
 
   const templates = letterTemplates[occ] || letterTemplates['amor-eterno'];
   let text = (templates[tone] || templates['poetico'])
@@ -365,135 +486,11 @@ function generateLetter() {
     'amor-eterno':  `${to}, mi todo,`
   };
 
-  document.getElementById('prevTitle').textContent      = titleMap[occ] || `${to}, mi amor,`;
+  document.getElementById('prevIcon').textContent       = customIcon;
+  document.getElementById('prevTitle').textContent      = customTitle || titleMap[occ] || `${to}, mi amor,`;
   document.getElementById('prevBody').textContent       = text;
   document.getElementById('prevBody').dataset.generated = 'true';
-  document.getElementById('prevSign').textContent       = `— Con todo mi amor, ${from}`;
-}
-
-/* ============================================================
-   DESCARGAR PDF GRATIS — generado en el navegador con Canvas
-   ============================================================ */
-function downloadPDF(id) {
-  const carta = cartas.find(c => c.id === id);
-  if (!carta) return;
-
-  /* --- Canvas setup --- */
-  const W = 794, H = 1123; // A4 a 96dpi
-  const canvas = document.createElement('canvas');
-  canvas.width  = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
-  /* --- Fondo degradado oscuro romántico --- */
-  const bg = ctx.createLinearGradient(0, 0, W, H);
-  bg.addColorStop(0,   '#2d0813');
-  bg.addColorStop(0.5, '#1A0A10');
-  bg.addColorStop(1,   '#3d0015');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
-
-  /* --- Borde dorado --- */
-  ctx.strokeStyle = 'rgba(201,150,58,0.6)';
-  ctx.lineWidth   = 3;
-  ctx.strokeRect(28, 28, W - 56, H - 56);
-  ctx.strokeStyle = 'rgba(201,150,58,0.2)';
-  ctx.lineWidth   = 1;
-  ctx.strokeRect(38, 38, W - 76, H - 76);
-
-  /* --- Corazones decorativos esquinas --- */
-  const hearts = ['❤️','💕','🌹','💖'];
-  ctx.font = '28px serif';
-  ctx.fillText(hearts[0], 52,  72);
-  ctx.fillText(hearts[1], W-82, 72);
-  ctx.fillText(hearts[2], 52,  H-42);
-  ctx.fillText(hearts[3], W-82, H-42);
-
-  /* --- Icono categoría --- */
-  ctx.font = '48px serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(carta.icon, W/2, 110);
-
-  /* --- Categoría label --- */
-  ctx.font = 'bold 13px sans-serif';
-  ctx.fillStyle = '#F0C96A';
-  ctx.letterSpacing = '3px';
-  ctx.fillText(carta.catLabel.toUpperCase(), W/2, 148);
-
-  /* --- Línea separadora dorada --- */
-  const grad = ctx.createLinearGradient(120, 0, W-120, 0);
-  grad.addColorStop(0,   'transparent');
-  grad.addColorStop(0.5, 'rgba(201,150,58,0.8)');
-  grad.addColorStop(1,   'transparent');
-  ctx.strokeStyle = grad;
-  ctx.lineWidth   = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(120, 162); ctx.lineTo(W-120, 162);
-  ctx.stroke();
-
-  /* --- Título de la carta --- */
-  ctx.font = 'italic bold 22px Georgia, serif';
-  ctx.fillStyle = '#F9BFCB';
-  ctx.fillText(carta.title, W/2, 200);
-
-  /* --- Cuerpo de la carta (wrap de texto) --- */
-  ctx.font = '15px Georgia, serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.88)';
-  ctx.textAlign = 'left';
-
-  const lines    = [];
-  const maxWidth = W - 140;
-  const paragraphs = carta.text.split('\n');
-
-  paragraphs.forEach(para => {
-    if (para.trim() === '') { lines.push(''); return; }
-    const words = para.split(' ');
-    let line = '';
-    words.forEach(word => {
-      const test = line ? line + ' ' + word : word;
-      if (ctx.measureText(test).width > maxWidth && line) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = test;
-      }
-    });
-    if (line) lines.push(line);
-    lines.push('');
-  });
-
-  let y = 236;
-  const lineH = 24;
-  lines.forEach(line => {
-    if (y < H - 110) {
-      ctx.fillText(line, 70, y);
-      y += line === '' ? lineH * 0.6 : lineH;
-    }
-  });
-
-  /* --- Línea separadora final --- */
-  ctx.strokeStyle = grad;
-  ctx.lineWidth   = 1;
-  ctx.beginPath();
-  ctx.moveTo(120, H-100); ctx.lineTo(W-120, H-100);
-  ctx.stroke();
-
-  /* --- Marca de agua / branding --- */
-  ctx.textAlign  = 'center';
-  ctx.font       = 'italic 18px Georgia, serif';
-  ctx.fillStyle  = '#F0C96A';
-  ctx.fillText('CartaMiAmor', W/2, H-68);
-  ctx.font       = '12px sans-serif';
-  ctx.fillStyle  = 'rgba(255,255,255,0.35)';
-  ctx.fillText('cartamiamor.pages.dev  ·  Carta generada gratis 💌', W/2, H-46);
-
-  /* --- Descargar como imagen PNG (funciona sin librerías) --- */
-  const link    = document.createElement('a');
-  link.download = `carta-${carta.cat}-CartaMiAmor.png`;
-  link.href     = canvas.toDataURL('image/png');
-  link.click();
-
-  showCopyFeedback('📄 ¡Carta descargada! Compártela con amor 💌');
+  document.getElementById('prevSign').textContent       = customSign  || `— Con todo mi amor, ${from}`;
 }
 
 function copyGeneratedLetter() {
@@ -581,6 +578,13 @@ function goToCategory(cat) {
 /* ============================================================
    SCROLL REVEAL
    ============================================================ */
+function selectGenIcon(icon, btn) {
+  document.getElementById('genIcon').value = icon;
+  document.querySelectorAll('#genIconPicker .icon-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updatePreview();
+}
+
 function initReveal() {
   const observer = new IntersectionObserver(
     entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),

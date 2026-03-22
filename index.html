@@ -302,6 +302,35 @@
             <option value="divertido">😄 Divertido y especial</option>
           </select>
         </div>
+
+        <!-- CAMPOS AVANZADOS -->
+        <details class="advanced-toggle">
+          <summary>⚙️ Personalización avanzada</summary>
+          <div class="advanced-fields">
+
+            <div class="form-group">
+              <label>Icono de la carta</label>
+              <div class="icon-picker" id="genIconPicker">
+                ${['💌','🌹','💍','👰','🌙','✈️','🌸','🔥','💛','♾️','🎭','🌺','🎂','🌟','💝','🦋','🕊️','🌈','⭐','💎'].map((ic, i) =>
+                  `<button type="button" class="icon-opt${i===0?' active':''}" onclick="selectGenIcon('${ic}',this)">${ic}</button>`
+                ).join('')}
+              </div>
+              <input type="hidden" id="genIcon" value="💌" />
+            </div>
+
+            <div class="form-group">
+              <label>Título personalizado <span style="font-weight:400;opacity:0.6">(opcional — reemplaza el automático)</span></label>
+              <input type="text" id="customTitle" placeholder="Ej: Mi corazón eterno," oninput="updatePreview()" />
+            </div>
+
+            <div class="form-group">
+              <label>Firma personalizada <span style="font-weight:400;opacity:0.6">(opcional)</span></label>
+              <input type="text" id="customSign" placeholder="Ej: — Para siempre tuyo, Carlos" oninput="updatePreview()" />
+            </div>
+
+          </div>
+        </details>
+
         <div class="form-group">
           <label>Mensaje personal (opcional)</label>
           <textarea id="personalNote" rows="3" placeholder="Añade algo especial de tu relación..." oninput="updatePreview()"></textarea>
@@ -332,16 +361,19 @@
       <!-- PREVISUALIZACIÓN -->
       <div class="creator-preview reveal">
         <div class="preview-inner">
-          <div class="preview-label">Vista previa de tu carta</div>
-          <div class="preview-title" id="prevTitle">Mi amor eterno,</div>
-          <div class="preview-body"  id="prevBody">
+          <div class="preview-label">Vista previa — <span style="font-size:0.65rem;opacity:0.7">haz clic para editar directo</span></div>
+          <div class="prev-icon-wrap">
+            <span id="prevIcon" class="prev-icon" contenteditable="true" title="Clic para cambiar">💌</span>
+          </div>
+          <div class="preview-title" id="prevTitle" contenteditable="true">Mi amor eterno,</div>
+          <div class="preview-body"  id="prevBody"  contenteditable="true">
 Completa el formulario para ver
 tu carta romántica personalizada
 aquí en tiempo real...
 
 Será única, hermosa y directa
 al corazón de quien amas. 💌</div>
-          <div class="preview-sign" id="prevSign">— Con todo mi amor</div>
+          <div class="preview-sign" id="prevSign" contenteditable="true">— Con todo mi amor</div>
         </div>
       </div>
     </div>
@@ -569,6 +601,17 @@ al corazón de quien amas. 💌</div>
       </p>
     </div>
   </footer>
+
+  <!-- ==========================================================
+       MODAL: EDITOR DE CARTA
+  =========================================================== -->
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal-box modal-box-wide">
+      <div id="editModalContent">
+        <!-- Contenido inyectado dinámicamente por JS -->
+      </div>
+    </div>
+  </div>
 
   <!-- ==========================================================
        MODAL: PREMIUM UPSELL
