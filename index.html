@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💌 CartasDeAmor.co — Cartas Románticas para Momentos Especiales</title>
+  <meta name="description" content="Encuentra la carta romántica perfecta para San Valentín, aniversario, boda y más. Crea, personaliza y comparte cartas únicas con tu pareja." />
+  <meta property="og:title"       content="💌 CartasDeAmor.co — Cartas Románticas" />
+  <meta property="og:description" content="Las palabras que tu corazón no puede callar. Cartas para San Valentín, aniversarios, bodas y más." />
+  <meta property="og:type"        content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- =====================================================
+       GOOGLE ADSENSE
+       Descomenta y reemplaza con tu Publisher ID real:
+  ====================================================== -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script> -->
+</head>
+<body>
+
+  <!-- CANVAS CORAZONES FLOTANTES -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- TOAST DE COPIA -->
+  <div class="copy-feedback" id="copyFeedback">💌 ¡Carta copiada! Envíasela a tu amor ❤️</div>
+
+  <!-- ==========================================================
+       NAVBAR
+  =========================================================== -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">Cartas<span>deAmor</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio"  onclick="closeNav()">Inicio</a></li>
+      <li><a href="#cartas"  onclick="closeNav()">Cartas</a></li>
+      <li><a href="#crear"   onclick="closeNav()">Crear Carta</a></li>
+      <li><a href="#fechas"  onclick="closeNav()">Fechas</a></li>
+      <li><a href="#premium" onclick="closeNav()" class="premium-link">💎 Premium</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" onclick="toggleNav()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- AD SLOT — HEADER -->
+  <div style="padding:72px 5vw 0; position:relative; z-index:1; background:var(--dark); display:none;">
+    <div class="ad-slot banner-top">
+      <!-- Reemplaza este comentario con tu código AdSense real -->
+      📢 Espacio publicitario — Google AdSense (728×90)
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       HERO
+  =========================================================== -->
+  <section id="inicio" style="position:relative; z-index:1;">
+    <div id="hero">
+      <div class="hero-petals"></div>
+      <div class="hero-content">
+        <div class="hero-badge">💌 &nbsp; +50,000 cartas enviadas este mes</div>
+        <h1 class="hero-title">
+          Las palabras que tu<br /><em>corazón no puede callar</em>
+        </h1>
+        <p class="hero-sub">
+          Cartas románticas escritas con amor para San Valentín, aniversarios, bodas y cada momento especial que merece ser eterno.
+        </p>
+        <div class="hero-btns">
+          <a href="#cartas" class="btn btn-primary">💌 Ver cartas románticas</a>
+          <a href="#crear"  class="btn btn-outline">✨ Crear mi carta</a>
+        </div>
+
+        <!-- 💰 BOTONES DE MONETIZACIÓN HERO — LOS QUE CONVIERTEN -->
+        <div class="hero-money-btns">
+          <a href="https://paypal.me/JoaLDC/3" target="_blank" class="btn btn-gold pulse">
+            💌 Carta personalizada por solo $3
+          </a>
+          <a href="https://wa.me/TU_NUMERO_AQUI?text=Hola!%20Quiero%20una%20carta%20personalizada%20%F0%9F%92%8C" target="_blank" class="btn btn-whatsapp">
+            📲 Te hago una carta única ahora
+          </a>
+        </div>
+        <p class="hero-urgency">⚡ Lista en menos de 24 horas · 100% personalizada · PayPal seguro</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stat-strip">
+    <div class="stat-item"><div class="stat-num">50K+</div><div class="stat-lbl">Cartas enviadas</div></div>
+    <div class="stat-item"><div class="stat-num">15+</div><div class="stat-lbl">Categorías</div></div>
+    <div class="stat-item"><div class="stat-num">98%</div><div class="stat-lbl">Parejas felices</div></div>
+    <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-lbl">Valoración</div></div>
+  </div>
+
+  <!-- ==========================================================
+       SECCIÓN DE MONETIZACIÓN DIRECTA (PayPal + WhatsApp)
+  =========================================================== -->
+  <section id="monetizacion" class="section" style="background: linear-gradient(135deg, #fff0f3, var(--ivory)); padding-bottom:40px;">
+    <div class="section-header reveal">
+      <div class="section-tag">💰 Servicio personalizado</div>
+      <h2 class="section-title">¿Quieres una carta única para tu pareja?</h2>
+      <p class="section-subtitle">Te escribo una carta personalizada con los detalles de tu historia de amor. Lista en menos de 24 horas.</p>
+    </div>
+
+    <!-- BANNER DE MONETIZACIÓN CON PAYPAL -->
+    <div class="monetize-banner reveal">
+
+      <!-- MÉTODO 1: Carta básica por PayPal -->
+      <div class="money-card">
+        <span class="money-card-icon">💌</span>
+        <div class="money-card-title">Carta Básica</div>
+        <div class="money-card-price">$3</div>
+        <div class="money-card-desc">Una carta romántica personalizada con tu historia y los nombres de tu pareja.</div>
+        <a href="https://paypal.me/JoaLDC/3" target="_blank" class="btn btn-paypal" style="width:100%; justify-content:center; font-size:0.82rem;">
+          💳 Pagar con PayPal
+        </a>
+        <div style="margin-top:10px;">
+          <button class="btn btn-whatsapp" style="width:100%; justify-content:center; font-size:0.82rem;" onclick="orderByWhatsApp()">
+            📲 Pedir por WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <!-- MÉTODO 2: Carta premium + PDF -->
+      <div class="money-card" style="border-color:rgba(201,150,58,0.4);">
+        <span class="money-card-icon">✨</span>
+        <div class="money-card-title">Carta Premium + PDF</div>
+        <div class="money-card-price">$5</div>
+        <div class="money-card-desc">Carta personalizada profunda + descarga PDF con diseño hermoso lista para imprimir o enviar.</div>
+        <a href="https://paypal.me/JoaLDC/5" target="_blank" class="btn btn-gold pulse" style="width:100%; justify-content:center; font-size:0.82rem;">
+          💎 Pagar con PayPal
+        </a>
+        <div style="margin-top:10px;">
+          <button class="btn btn-whatsapp" style="width:100%; justify-content:center; font-size:0.82rem;" onclick="orderByWhatsApp()">
+            📲 Pedir por WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <!-- MÉTODO 3: Solo PDF ($2) -->
+      <div class="money-card">
+        <span class="money-card-icon">📄</span>
+        <div class="money-card-title">Carta en PDF</div>
+        <div class="money-card-price">$2</div>
+        <div class="money-card-desc">Descarga cualquier carta de la web en formato PDF con diseño romántico premium.</div>
+        <a href="https://paypal.me/JoaLDC/2" target="_blank" class="btn btn-paypal" style="width:100%; justify-content:center; font-size:0.82rem;">
+          📄 Descargar PDF — $2
+        </a>
+        <div style="margin-top:10px;">
+          <button class="btn btn-ghost" style="width:100%; justify-content:center; font-size:0.82rem;" onclick="orderByWhatsApp()">
+            📲 Solicitar por WhatsApp
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /monetize-banner -->
+
+    <div style="text-align:center; margin-top:30px;" class="reveal">
+      <p style="color:var(--muted); font-size:0.88rem; margin-bottom:14px;">
+        🔒 Pagos seguros vía PayPal · Carta lista en menos de 24h · 100% satisfacción garantizada
+      </p>
+      <button class="btn btn-primary" onclick="orderByWhatsApp()" style="font-size:1rem; padding:16px 36px;">
+        📲 Pedir mi carta personalizada por WhatsApp
+      </button>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       CARTAS GRATIS
+  =========================================================== -->
+  <section id="cartas" class="section section-alt">
+    <div class="section-header reveal">
+      <div class="section-tag">💌 Colección completa</div>
+      <h2 class="section-title">Cartas para cada momento especial</h2>
+      <p class="section-subtitle">Encuentra la carta perfecta, cópiala, personalízala y envíasela a quien amas.</p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filter-bar reveal">
+      <button class="filter-btn active" onclick="filterCards('todas', this)">💖 Todas</button>
+      <button class="filter-btn" onclick="filterCards('san-valentin', this)">🌹 San Valentín</button>
+      <button class="filter-btn" onclick="filterCards('aniversario', this)">💍 Aniversario</button>
+      <button class="filter-btn" onclick="filterCards('boda', this)">👰 Boda</button>
+      <button class="filter-btn" onclick="filterCards('buenas-noches', this)">🌙 Buenas noches</button>
+      <button class="filter-btn" onclick="filterCards('distancia', this)">✈️ A distancia</button>
+    </div>
+
+    <!-- AD SLOT MID -->
+    <div class="ad-slot banner-mid" style="display:none;">
+      📢 Espacio publicitario — Google AdSense (300×250 o 728×90)
+    </div>
+
+    <!-- GRID DE CARTAS (renderizado por JS) -->
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <!-- 💣 MENSAJE QUE VENDE -->
+    <div class="sell-msg-block reveal">
+      <p class="sell-msg-text">💔 ¿No sabes qué escribirle?<br/>Yo lo hago por ti en minutos 💌</p>
+      <div class="sell-msg-btns">
+        <a href="https://paypal.me/JoaLDC/3" target="_blank" class="btn btn-gold pulse">
+          💌 Carta personalizada — $3 PayPal
+        </a>
+        <a href="https://wa.me/TU_NUMERO_AQUI?text=Hola!%20Quiero%20una%20carta%20personalizada%20%F0%9F%92%8C" target="_blank" class="btn btn-whatsapp">
+          📲 Te hago una carta única ahora
+        </a>
+      </div>
+    </div>
+
+    <!-- COMPARTIR -->
+    <div style="text-align:center; margin-top:36px;" class="reveal">
+      <p style="color:var(--muted); margin-bottom:18px;">Envíaselo a tu pareja ❤️ — ¡Haz que su día sea inolvidable!</p>
+      <div class="share-bar">
+        <button class="share-btn share-wa" onclick="shareWhatsApp()">🟢 WhatsApp</button>
+        <button class="share-btn share-fb" onclick="shareFacebook()">📘 Facebook</button>
+        <button class="share-btn share-tw" onclick="shareTwitter()">🐦 Twitter</button>
+        <button class="share-btn share-cp" onclick="copyLink()">🔗 Copiar link</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       SECCIÓN: CARTAS POR ENCARGO
+  =========================================================== -->
+  <section class="section encargo-section">
+    <div class="encargo-inner reveal">
+      <div class="encargo-emoji">💌</div>
+      <h2 class="encargo-title">Te escribo la carta perfecta</h2>
+      <p class="encargo-sub">Cuéntame tu historia y te hago una carta única que la hará llorar ❤️<br/>
+      Más de <strong>200 parejas</strong> ya la recibieron y nunca la olvidaron.</p>
+
+      <div class="encargo-cards">
+        <div class="encargo-card">
+          <div class="encargo-card-icon">✍️</div>
+          <div class="encargo-card-label">Básica</div>
+          <div class="encargo-card-price">$3</div>
+          <div class="encargo-card-desc">Carta romántica personalizada con sus nombres e historia</div>
+          <a href="https://paypal.me/JoaLDC/3" target="_blank" class="btn btn-paypal" style="width:100%; justify-content:center; margin-top:14px;">💳 Pagar con PayPal</a>
+        </div>
+        <div class="encargo-card featured">
+          <div class="encargo-badge">⭐ LA MÁS PEDIDA</div>
+          <div class="encargo-card-icon">💎</div>
+          <div class="encargo-card-label">Premium</div>
+          <div class="encargo-card-price">$5</div>
+          <div class="encargo-card-desc">Carta profunda + diseño PDF hermoso para imprimir o enviar</div>
+          <a href="https://paypal.me/JoaLDC/5" target="_blank" class="btn btn-gold pulse" style="width:100%; justify-content:center; margin-top:14px;">💎 Carta premium personalizada</a>
+        </div>
+        <div class="encargo-card">
+          <div class="encargo-card-icon">📲</div>
+          <div class="encargo-card-label">Por WhatsApp</div>
+          <div class="encargo-card-price">$3–$5</div>
+          <div class="encargo-card-desc">Escríbeme directamente, cuéntame tu historia, carta lista en 24h</div>
+          <a href="https://wa.me/TU_NUMERO_AQUI?text=Hola!%20Quiero%20una%20carta%20personalizada%20%F0%9F%92%8C" target="_blank" class="btn btn-whatsapp" style="width:100%; justify-content:center; margin-top:14px;">📲 Pedir por WhatsApp</a>
+        </div>
+      </div>
+
+      <p class="encargo-trust">🔒 Pago seguro · ⚡ Lista en menos de 24h · 💯 Satisfacción garantizada</p>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       CREAR CARTA
+  =========================================================== -->
+  <section id="crear" class="section">
+    <div class="section-header reveal">
+      <div class="section-tag">✨ Generador mágico</div>
+      <h2 class="section-title">Crea tu carta única</h2>
+      <p class="section-subtitle">Personaliza cada detalle y genera una carta romántica irrepetible en segundos.</p>
+    </div>
+
+    <div class="creator-wrap">
+      <!-- FORMULARIO -->
+      <div class="creator-form reveal">
+        <div class="form-group">
+          <label>Tu nombre</label>
+          <input type="text" id="fromName" placeholder="Ej: Carlos" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Nombre de tu amor</label>
+          <input type="text" id="toName" placeholder="Ej: María" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Ocasión</label>
+          <select id="occasion" onchange="updatePreview()">
+            <option value="san-valentin">💝 San Valentín</option>
+            <option value="aniversario">💍 Aniversario</option>
+            <option value="boda">👰 Boda</option>
+            <option value="cumpleanos">🎂 Cumpleaños</option>
+            <option value="primer-mes">🌸 Primer mes</option>
+            <option value="amor-eterno">♾️ Amor eterno</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tono de la carta</label>
+          <select id="tone" onchange="generateLetter()">
+            <option value="poetico">🌹 Poético y profundo</option>
+            <option value="tierno">🐣 Tierno y suave</option>
+            <option value="apasionado">🔥 Apasionado</option>
+            <option value="divertido">😄 Divertido y especial</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mensaje personal (opcional)</label>
+          <textarea id="personalNote" rows="3" placeholder="Añade algo especial de tu relación..." oninput="updatePreview()"></textarea>
+        </div>
+
+        <!-- BOTONES ACCIÓN -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+          <button class="btn btn-primary" onclick="generateLetter()" style="flex:1;">✨ Generar carta</button>
+          <button class="btn btn-ghost"   onclick="copyGeneratedLetter()">📋 Copiar</button>
+        </div>
+
+        <!-- UPSELL PDF CON PAYPAL -->
+        <div style="padding:18px; background:linear-gradient(135deg, #fff0f3, #fff8f0); border-radius:var(--radius-sm); border:1.5px solid var(--blush); text-align:center;">
+          <p style="font-size:0.82rem; color:var(--muted); margin-bottom:12px;">
+            💎 <strong>Descarga esta carta en PDF con diseño hermoso</strong><br />
+            <span style="font-size:0.75rem;">Lista para imprimir, enmarcar o enviar por WhatsApp</span>
+          </p>
+          <a href="https://paypal.me/JoaLDC/2" target="_blank" class="btn btn-gold" style="font-size:0.82rem; padding:10px 22px; margin-bottom:8px; display:inline-flex;">
+            📄 Descargar carta bonita en PDF — $2
+          </a>
+          <br />
+          <button class="btn btn-whatsapp" onclick="orderByWhatsApp()" style="font-size:0.8rem; padding:9px 20px;">
+            📲 Pedir carta personalizada — WhatsApp
+          </button>
+        </div>
+      </div><!-- /creator-form -->
+
+      <!-- PREVISUALIZACIÓN -->
+      <div class="creator-preview reveal">
+        <div class="preview-inner">
+          <div class="preview-label">Vista previa de tu carta</div>
+          <div class="preview-title" id="prevTitle">Mi amor eterno,</div>
+          <div class="preview-body"  id="prevBody">
+Completa el formulario para ver
+tu carta romántica personalizada
+aquí en tiempo real...
+
+Será única, hermosa y directa
+al corazón de quien amas. 💌</div>
+          <div class="preview-sign" id="prevSign">— Con todo mi amor</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       FECHAS ESPECIALES
+  =========================================================== -->
+  <section id="fechas" class="section section-alt">
+    <div class="section-header reveal">
+      <div class="section-tag">📅 Calendario del amor</div>
+      <h2 class="section-title">Fechas especiales de pareja</h2>
+      <p class="section-subtitle">Nunca olvides una fecha importante. Haz clic para ver cartas de esa ocasión.</p>
+    </div>
+
+    <div class="dates-grid">
+      <div class="date-card reveal" onclick="goToCategory('san-valentin')">
+        <span class="date-icon">🌹</span>
+        <div class="date-title">San Valentín</div>
+        <div class="date-desc">14 de febrero — El día más romántico del año</div>
+      </div>
+      <div class="date-card reveal" onclick="goToCategory('aniversario')">
+        <span class="date-icon">💍</span>
+        <div class="date-title">Aniversario</div>
+        <div class="date-desc">Celebra cada año junto a tu persona favorita</div>
+      </div>
+      <div class="date-card reveal" onclick="goToCategory('boda')">
+        <span class="date-icon">👰</span>
+        <div class="date-title">Boda</div>
+        <div class="date-desc">El día que dos corazones se convierten en uno</div>
+      </div>
+      <div class="date-card reveal" onclick="filterCards('buenas-noches', null)">
+        <span class="date-icon">🌙</span>
+        <div class="date-title">Buenas noches</div>
+        <div class="date-desc">Termina el día con una palabra dulce</div>
+      </div>
+      <div class="date-card reveal" onclick="goToCategory('distancia')">
+        <span class="date-icon">✈️</span>
+        <div class="date-title">Amor a distancia</div>
+        <div class="date-desc">Cuando los kilómetros no pueden con el amor</div>
+      </div>
+      <div class="date-card reveal" onclick="orderByWhatsApp()">
+        <span class="date-icon">🎂</span>
+        <div class="date-title">Cumpleaños especial</div>
+        <div class="date-desc">Pide una carta única personalizada para su cumpleaños</div>
+      </div>
+      <div class="date-card reveal" onclick="orderByWhatsApp()">
+        <span class="date-icon">🌸</span>
+        <div class="date-title">Primer mes</div>
+        <div class="date-desc">Cada mes con la persona correcta es motivo de celebración</div>
+      </div>
+      <div class="date-card reveal" onclick="orderByWhatsApp()">
+        <span class="date-icon">🌟</span>
+        <div class="date-title">Momentos únicos</div>
+        <div class="date-desc">Para cuando simplemente quieres decirle cuánto lo amas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="section">
+    <div class="section-header reveal">
+      <div class="section-tag">❤️ Lo que dicen</div>
+      <h2 class="section-title">Parejas que lo vivieron</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Usé una carta de aquí para mi aniversario y mi esposa lloró de emoción. ¡Las palabras eran exactamente lo que yo sentía pero no sabía expresar!"</p>
+        <div class="testi-author">— Carlos M., Santo Domingo</div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Me la enviaron por WhatsApp y fue lo más bonito que he recibido en mi vida. Gracias a esta página mi relación volvió a tener magia ✨"</p>
+        <div class="testi-author">— Sofía R., Bogotá</div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Pedí la carta personalizada por WhatsApp y me la entregaron en una hora. Mi novia quedó sin palabras. Vale cada centavo 💌"</p>
+        <div class="testi-author">— Miguel A., Ciudad de México</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       PREMIUM
+  =========================================================== -->
+  <section id="premium" class="section section-dark premium-section">
+    <div class="section-header reveal">
+      <div class="section-tag">💎 Acceso exclusivo</div>
+      <h2 class="section-title">Desbloquea el amor sin límites</h2>
+      <p class="section-subtitle">Accede a +200 cartas exclusivas, generador con IA, descarga en PDF con diseño premium y mucho más.</p>
+    </div>
+
+    <div class="premium-plans">
+      <!-- Plan Gratis -->
+      <div class="plan-card reveal">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price"><sup>$</sup>0</div>
+        <div class="plan-period">para siempre</div>
+        <ul class="plan-features">
+          <li>15 cartas gratuitas</li>
+          <li>Generador básico</li>
+          <li>Copiar cartas</li>
+          <li>Compartir en redes</li>
+        </ul>
+        <a href="#cartas" class="btn btn-outline" style="width:100%; justify-content:center;">Ver cartas gratis</a>
+      </div>
+
+      <!-- Plan Popular -->
+      <div class="plan-card featured reveal">
+        <div class="plan-badge-top">⭐ MÁS POPULAR</div>
+        <div class="plan-name">Amor Premium</div>
+        <div class="plan-price"><sup>$</sup>4<span style="font-size:1.2rem">.99</span></div>
+        <div class="plan-period">por mes</div>
+        <ul class="plan-features">
+          <li>+200 cartas exclusivas</li>
+          <li>Generador con IA avanzada</li>
+          <li>Descarga PDF con diseño</li>
+          <li>Animaciones para WhatsApp</li>
+          <li>Sin anuncios</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <a href="https://paypal.me/JoaLDC/4.99" target="_blank" class="btn btn-gold pulse" style="width:100%; justify-content:center;">
+          💎 Desbloquear ahora — PayPal
+        </a>
+        <div style="margin-top:10px;">
+          <button class="btn btn-whatsapp" onclick="orderByWhatsApp()" style="width:100%; justify-content:center; font-size:0.82rem;">
+            📲 Comprar por WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <!-- Plan Vitalicio -->
+      <div class="plan-card reveal">
+        <div class="plan-name">Amor Eterno</div>
+        <div class="plan-price"><sup>$</sup>34<span style="font-size:1.2rem">.99</span></div>
+        <div class="plan-period">de por vida</div>
+        <ul class="plan-features">
+          <li>Todo lo de Premium</li>
+          <li>Acceso de por vida</li>
+          <li>Cartas personalizadas pro</li>
+          <li>Impresión con diseño único</li>
+          <li>Acceso anticipado nuevas cartas</li>
+        </ul>
+        <a href="https://paypal.me/JoaLDC/34.99" target="_blank" class="btn btn-outline" style="width:100%; justify-content:center;">
+          Obtener acceso vitalicio
+        </a>
+      </div>
+    </div>
+
+    <div class="divider-heart"><span></span>💖<span></span></div>
+    <p style="color:rgba(255,255,255,0.5); font-size:0.82rem; margin-bottom:24px;">
+      🔒 Pago seguro vía PayPal · Cancela cuando quieras · Miles de parejas felices
+    </p>
+    <!-- WHATSAPP CTA EN PREMIUM -->
+    <a href="https://wa.me/TU_NUMERO_AQUI?text=Hola!%20Quiero%20una%20carta%20personalizada%20para%20mi%20pareja%20%F0%9F%92%8C" target="_blank" class="btn btn-whatsapp pulse" style="font-size:1.05rem; padding:18px 40px;">
+      📲 Te hago una carta única ahora — WhatsApp
+    </a>
+  </section>
+
+  <!-- ==========================================================
+       SECCIÓN VIRAL / COMPARTIR
+  =========================================================== -->
+  <section class="section" style="text-align:center; background:linear-gradient(135deg, #fff0f3, var(--ivory));">
+    <div class="reveal">
+      <div style="font-size:3rem; margin-bottom:16px;">💖</div>
+      <h2 class="section-title">¿Tienes pareja o amigo/a enamorado/a?</h2>
+      <p class="section-subtitle" style="margin-bottom:30px;">¡Comparte esta página! Ayuda a que más personas expresen su amor con las palabras correctas 🥰</p>
+      <div class="share-bar">
+        <button class="share-btn share-wa" onclick="shareWhatsApp()">🟢 Compartir en WhatsApp</button>
+        <button class="share-btn share-fb" onclick="shareFacebook()">📘 Compartir en Facebook</button>
+        <button class="share-btn share-tw" onclick="shareTwitter()">🐦 Tweet con amor</button>
+        <button class="share-btn share-cp" onclick="copyLink()">🔗 Copiar enlace</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD SLOT — FOOTER TOP -->
+  <div style="padding:0 5vw; background:var(--dark); position:relative; z-index:1; display:none;">
+    <div class="ad-slot banner-foot">📢 Espacio publicitario — Google AdSense (728×90)</div>
+  </div>
+
+  <!-- ==========================================================
+       FOOTER
+  =========================================================== -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">Cartas<span>deAmor</span></a>
+        <p>El lugar donde las palabras se convierten en el regalo más hermoso. Más de 50,000 corazones enamorados nos eligen cada mes.</p>
+        <!-- DONACIÓN (Método pasivo) -->
+        <div class="footer-donate" style="margin-top:16px;">
+          <span>☕</span>
+          <a href="https://paypal.me/JoaLDC" target="_blank">Apoya esta página con un café</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explorar</h4>
+        <ul>
+          <li><a href="#cartas">Cartas románticas</a></li>
+          <li><a href="#crear">Crear mi carta</a></li>
+          <li><a href="#fechas">Fechas especiales</a></li>
+          <li><a href="#premium">Premium 💎</a></li>
+          <li><a href="#monetizacion">Carta personalizada 💌</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Categorías</h4>
+        <ul>
+          <li><a href="#" onclick="filterCards('san-valentin',null);return false;">San Valentín 🌹</a></li>
+          <li><a href="#" onclick="filterCards('aniversario',null);return false;">Aniversario 💍</a></li>
+          <li><a href="#" onclick="filterCards('boda',null);return false;">Boda 👰</a></li>
+          <li><a href="#" onclick="filterCards('distancia',null);return false;">A distancia ✈️</a></li>
+          <li><a href="#" onclick="filterCards('buenas-noches',null);return false;">Buenas noches 🌙</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 CartasdeAmor.co — Hecho con ❤️ para todas las parejas del mundo</p>
+      <p>
+        <a href="#">Privacidad</a> ·
+        <a href="#">Términos</a> ·
+        <a href="#" onclick="orderByWhatsApp(); return false;">Contacto 📲</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================
+       MODAL: PREMIUM UPSELL
+  =========================================================== -->
+  <div class="modal-backdrop" id="premiumModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('premiumModal')">✕</button>
+      <span class="modal-icon">💎</span>
+      <div class="modal-title">Esta carta es Premium</div>
+      <p class="modal-text">
+        Desbloquea acceso a <strong>+200 cartas exclusivas</strong>, descarga en PDF con diseño hermoso, generador con IA y mucho más.
+        <br/><br/>
+        ¡Por solo <strong>$4.99/mes</strong> haz que cada carta sea un recuerdo eterno!
+      </p>
+      <a href="https://paypal.me/JoaLDC/4.99" target="_blank" class="btn btn-gold pulse" style="width:100%; justify-content:center; margin-bottom:10px;" onclick="closeModal('premiumModal')">
+        💳 Pagar con PayPal — $4.99/mes
+      </a>
+      <button class="btn btn-whatsapp" style="width:100%; justify-content:center; margin-bottom:12px;" onclick="closeModal('premiumModal'); orderByWhatsApp()">
+        📲 Comprar por WhatsApp
+      </button>
+      <button class="btn btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('premiumModal')">
+        No gracias, quedarme con lo gratis
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       MODAL: POPUP TEMPORAL (18 segundos)
+  =========================================================== -->
+  <div class="modal-backdrop" id="timedModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('timedModal')">✕</button>
+      <span class="modal-icon">🌹</span>
+      <div class="modal-title">¡Espera! Tenemos algo para ti</div>
+      <p class="modal-text">
+        Accede a nuestras <strong>cartas más románticas y exclusivas</strong> que han emocionado a miles de parejas.
+        <br/><br/>
+        O pide ahora tu <strong>carta personalizada</strong> entregada en menos de 24 horas 💌
+      </p>
+      <a href="https://paypal.me/JoaLDC/3" target="_blank" class="btn btn-primary pulse" style="width:100%; justify-content:center; margin-bottom:10px;" onclick="closeModal('timedModal')">
+        💳 Carta personalizada — $3 PayPal
+      </a>
+      <button class="btn btn-whatsapp" style="width:100%; justify-content:center; margin-bottom:12px;" onclick="closeModal('timedModal'); orderByWhatsApp()">
+        📲 Pedir por WhatsApp
+      </button>
+      <button class="btn btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('timedModal')">
+        Continuar gratis
+      </button>
+    </div>
+  </div>
+
+  <!-- JavaScript principal -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>
